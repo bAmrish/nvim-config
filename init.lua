@@ -55,6 +55,14 @@ lazy.setup ({
         },
         build = ':TSUpdate',
     },
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+    }
 })
   
 
@@ -71,7 +79,8 @@ require('lualine').setup({
 
 require('Comment').setup()
 require("mason").setup()
-
+local wk = require("which-key")
+wk.register(mappings, opts)
 --------------------------------------------------------------------------------
 -- CUSTOM SETTINGS
 --------------------------------------------------------------------------------
@@ -143,17 +152,17 @@ set.termguicolors = true
 --------------------------------------------------------------------------------
 
 -- Save the current file with <leader>w 
-vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', {desc= 'Save'})
+vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', {desc= '[w]rite the file to disk. Save.'})
 
 
 -- Buffer Key Mappings --
 -- My own buffer key mappings
-vim.keymap.set('n', '<leader>b', '<cmd>:ls<cr>', {desc='Show list of all the open buffers'})
+vim.keymap.set('n', '<leader>b', '<cmd>:ls<cr>', {desc='Show list of all the open [b]uffers'})
 -- close and remove the buffer
-vim.keymap.set('n', '<leader>q', '<cmd>:bd<cr>', {desc='Show list of all the open buffers'})
+vim.keymap.set('n', '<leader>q', '<cmd>:bd<cr>', {desc='[q]uit the current active buffer. Closes the buffer'})
 
 -- open previous buffer
-vim.keymap.set('n', '<leader><leader>', '<cmd>:bp<cr>', {desc='switch to previous buffer'})
+vim.keymap.set('n', '<leader><leader>', '<cmd>:bp<cr>', {desc='Switch to previous buffer'})
 
 -- map page up and page down
 vim.keymap.set('n', '<leader>j', '<C-d>', {desc='Page down'})
@@ -162,13 +171,13 @@ vim.keymap.set('n', '<leader>k', '<C-u>', {desc='Page up'})
 
 -- Configure telescope
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>gf', builtin.git_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {desc = '[f]ind [f]iles'})
+vim.keymap.set('n', '<leader>gf', builtin.git_files, {desc = '[g]it [f]iles'})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc = '[f]ind [b]uffer'})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {desc = '[f]ind [h]elp'})
+vim.keymap.set('n', '<leader>lg', builtin.live_grep, {desc = '[l]ive [g]rep'})
 
-
+vim.keymap.set('n', '<leader>fs', builtin.treesitter, {desc = '[f]ind [s]ymbols'})
 
 
 
