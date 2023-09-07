@@ -1,4 +1,3 @@
--- require("user.plugins")
 -- My own custom init.lua file. 
 -- from scratch.
 
@@ -38,10 +37,40 @@ lazy.path = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 lazy.opts = {}
 
 lazy.setup ({
-    {'folke/tokyonight.nvim'},
-    {'nvim-lualine/lualine.nvim'},
+	{'folke/tokyonight.nvim'},
+    {'navarasu/onedark.nvim'},
+    {'tpope/vim-fugitive'},
+	{'nvim-lualine/lualine.nvim'},
+	{'numToStr/Comment.nvim'},
+	{
+		'nvim-telescope/telescope.nvim', tag = '0.1.2',
+		dependencies = { 'nvim-lua/plenary.nvim' }
+    },
+    {"williamboman/mason.nvim"},
+    {
+        -- Highlight, edit, and navigate code
+        'nvim-treesitter/nvim-treesitter',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects',
+        },
+        build = ':TSUpdate',
+    },
 })
   
+
+require('onedark').setup({style = 'darker'})
+
+-- vim.cmd.colorscheme('tokyonight')
+vim.cmd.colorscheme('onedark')
+
+require('lualine').setup({
+    icons_enabled = false,
+    component_separators = '|',
+    section_separators = '',
+})
+
+require('Comment').setup()
+require("mason").setup()
 
 --------------------------------------------------------------------------------
 -- CUSTOM SETTINGS
@@ -93,7 +122,6 @@ set.undofile = true
 -- Keep signcolumn on by default
 set.signcolumn = 'yes'
 
-
 -- There are certain files that we would never want to edit with Vim.
 -- will ignore files with these extensions.
 set.wildignore = "*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx"
@@ -109,7 +137,6 @@ set.wildmode= "list:longest"
 
 set.termguicolors = true
 
-vim.cmd.colorscheme('tokyonight')
 
 --------------------------------------------------------------------------------
 -- KEY BINDINGS
@@ -122,6 +149,8 @@ vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', {desc= 'Save'})
 -- Buffer Key Mappings --
 -- My own buffer key mappings
 vim.keymap.set('n', '<leader>b', '<cmd>:ls<cr>', {desc='Show list of all the open buffers'})
+-- close and remove the buffer
+vim.keymap.set('n', '<leader>q', '<cmd>:bd<cr>', {desc='Show list of all the open buffers'})
 
 -- open previous buffer
 vim.keymap.set('n', '<leader><leader>', '<cmd>:bp<cr>', {desc='switch to previous buffer'})
@@ -131,14 +160,13 @@ vim.keymap.set('n', '<leader>j', '<C-d>', {desc='Page down'})
 vim.keymap.set('n', '<leader>k', '<C-u>', {desc='Page up'})
 
 
-require('lualine').setup({
-    theme = 'gruvbox',
-    icons_enabled = false,
-})
-
-
-
-
+-- Configure telescope
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>gf', builtin.git_files, {})
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 
 
