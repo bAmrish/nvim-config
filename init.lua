@@ -41,6 +41,10 @@ lazy.setup ({
     {'navarasu/onedark.nvim'},
     {'tpope/vim-fugitive'},
 	{'nvim-lualine/lualine.nvim'},
+    {
+        'kevinhwang91/nvim-ufo',
+        dependencies = {'kevinhwang91/promise-async'},
+    },
 	{'numToStr/Comment.nvim'},
 	{
 		'nvim-telescope/telescope.nvim', tag = '0.1.2',
@@ -62,7 +66,26 @@ lazy.setup ({
             vim.o.timeout = true
             vim.o.timeoutlen = 300
         end,
-    }
+    },
+    {
+        -- Adds git related signs to the gutter, as well as utilities for managing changes
+        'lewis6991/gitsigns.nvim',
+        opts = {
+            -- See `:help gitsigns.txt`
+            signs = {
+                add = { text = '+' },
+                change = { text = '~' },
+                delete = { text = '_' },
+                topdelete = { text = '‾' },
+                changedelete = { text = '~' },
+            },
+            on_attach = function(bufnr)
+                vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+                vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
+                vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
+            end,
+        },
+    },
 })
   
 
@@ -81,6 +104,31 @@ require('Comment').setup()
 require("mason").setup()
 local wk = require("which-key")
 wk.register(mappings, opts)
+
+require('nvim-treesitter.configs').setup {
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+
+  -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
+  auto_install = false,
+
+  highlight = { enable = true },
+  indent = { enable = true },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = '<c-space>',
+      node_incremental = '<c-space>',
+      scope_incremental = '<c-s>',
+      node_decremental = '<M-space>',
+    },
+  },
+}
+require('ufo').setup({
+    close_fold_kinds = {'imports', 'comment'},
+    provider_selector = function(bufnr, filetype, buftype)
+        return {'treesitter', 'indent'}
+    end
+})
 --------------------------------------------------------------------------------
 -- CUSTOM SETTINGS
 --------------------------------------------------------------------------------
@@ -146,6 +194,13 @@ set.wildmode= "list:longest"
 
 set.termguicolors = true
 
+-- settings for nvim-ufo
+-- https://github.com/kevinhwang91/nvim-ufo
+set.foldcolumn = '1' -- '0' is not bad
+set.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+set.foldlevelstart = 99
+set.foldenable = true
+
 
 --------------------------------------------------------------------------------
 -- KEY BINDINGS
@@ -172,12 +227,12 @@ vim.keymap.set('n', '<leader>k', '<C-u>', {desc='Page up'})
 -- Configure telescope
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {desc = '[f]ind [f]iles'})
+vim.keymap.set('n', '<leader>fs', builtin.treesitter, {desc = '[f]ind [s]ymbols'})
 vim.keymap.set('n', '<leader>gf', builtin.git_files, {desc = '[g]it [f]iles'})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc = '[f]ind [b]uffer'})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {desc = '[f]ind [h]elp'})
 vim.keymap.set('n', '<leader>lg', builtin.live_grep, {desc = '[l]ive [g]rep'})
 
-vim.keymap.set('n', '<leader>fs', builtin.treesitter, {desc = '[f]ind [s]ymbols'})
 
 
 
