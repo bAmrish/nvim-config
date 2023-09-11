@@ -207,15 +207,24 @@ set.foldenable = true
 --------------------------------------------------------------------------------
 
 -- Save the current file with <leader>w 
-vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', {desc= '[w]rite the file to disk. Save.'})
+-- vim.keymap.set('n', '<leader>w', '<cmd>write<cr>', {desc= '[w]rite the file to disk. Save.'})
+-- Apparently this only works on Macwim. `D` identifes the 'Command' key
+-- vim.keymap.set('', '<D-s>', '<cmd>write<cr>', {desc= '[s]ave file.'})
 
+-- Window management key mappings
+vim.keymap.set('n', '<leader>wl', '<C-W>l', {desc= 'move to the window to the right'})
+
+vim.keymap.set('n', '<leader>wh', '<C-W>h', {desc= 'move to the window to the left'})
+
+vim.keymap.set('n', '<leader>wj', '<C-W>j', {desc= 'move to the window below'})
+
+vim.keymap.set('n', '<leader>wk', '<C-W>k', {desc= 'move to the window above.'})
 
 -- Buffer Key Mappings --
 -- My own buffer key mappings
 vim.keymap.set('n', '<leader>b', '<cmd>:ls<cr>', {desc='Show list of all the open [b]uffers'})
 -- close and remove the buffer
 vim.keymap.set('n', '<leader>q', '<cmd>:bd<cr>', {desc='[q]uit the current active buffer. Closes the buffer'})
-
 -- open previous buffer
 vim.keymap.set('n', '<leader><leader>', '<cmd>:bp<cr>', {desc='Switch to previous buffer'})
 
@@ -232,6 +241,10 @@ vim.keymap.set('n', '<leader>gf', builtin.git_files, {desc = '[g]it [f]iles'})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {desc = '[f]ind [b]uffer'})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {desc = '[f]ind [h]elp'})
 vim.keymap.set('n', '<leader>lg', builtin.live_grep, {desc = '[l]ive [g]rep'})
+
+-- A keymap to insert date into the editor
+vim.keymap.set('i', '<C-t>', function() return os.date('(%a) %Y-%m-%d') end, {desc = 'insert da[t]e', expr = true, noremap = true})
+
 
 
 
