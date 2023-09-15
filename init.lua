@@ -3,7 +3,7 @@
 
 -- Start with mapping you leader key to ' ' (space) 
 vim.g.mapleader = ' '
-
+vim.g.maplocalleader = ','
 --------------------------------------------------------------------------------
 -- PLUGINS
 --------------------------------------------------------------------------------
@@ -39,7 +39,9 @@ lazy.opts = {}
 lazy.setup ({
 	{'folke/tokyonight.nvim'},
     {'navarasu/onedark.nvim'},
+    {'tpope/vim-surround'},
     {'tpope/vim-fugitive'},
+    -- {'nvim-neorg/neorg'},
 	{'nvim-lualine/lualine.nvim'},
     {
         'kevinhwang91/nvim-ufo',
@@ -65,6 +67,29 @@ lazy.setup ({
         init = function()
             vim.o.timeout = true
             vim.o.timeoutlen = 300
+        end,
+    },
+    {
+        "nvim-neorg/neorg",
+        build = ":Neorg sync-parsers",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {}, -- Loads default behaviour
+                    ["core.concealer"] = {}, -- Adds pretty icons to your documents
+                    ["core.dirman"] = { -- Manages Neorg workspaces
+                        config = {
+                            workspaces = {
+                                notes = "~/Personal/notes",
+                                home = "~/Personal/notes/home",
+                                work = "~/Personal/notes/work"
+                            },
+                            default_workspace = "notes"
+                        },
+                    },
+                },
+            }
         end,
     },
     {
@@ -129,6 +154,7 @@ require('ufo').setup({
         return {'treesitter', 'indent'}
     end
 })
+
 --------------------------------------------------------------------------------
 -- CUSTOM SETTINGS
 --------------------------------------------------------------------------------
@@ -200,7 +226,7 @@ set.foldcolumn = '1' -- '0' is not bad
 set.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 set.foldlevelstart = 99
 set.foldenable = true
-
+set.shell="/bin/bash --rcfile ~/.bash_profile -i"
 
 --------------------------------------------------------------------------------
 -- KEY BINDINGS
@@ -244,6 +270,24 @@ vim.keymap.set('n', '<leader>lg', builtin.live_grep, {desc = '[l]ive [g]rep'})
 
 -- A keymap to insert date into the editor
 vim.keymap.set('i', '<C-t>', function() return os.date('(%a) %Y-%m-%d') end, {desc = 'insert da[t]e', expr = true, noremap = true})
+
+--------------------------------------------------------------------------------
+-- CUSTOM Commands 
+--------------------------------------------------------------------------------
+
+-- command cdconfig !cd ~/.config/nvim
+-- vim.cmd [[cdconfig :!cd ~/.config/nvim]]
+
+-- local function cdconfig() 
+--     vim.cmd "!cd ~/.config/nvim "
+-- end
+
+-- :call nvim_create_user_command('cdconfig', "cd ~/.config/nvim ", {'bang': v:true})
+vim.api.nvim_create_user_command('Mal', function(myopts)
+    -- local commandString = "echo command = `" + myopts.args + "`"
+    vim.cmd(commandString)
+end, {nargs = '*',desc= "My alaias"})
+
 
 
 
